@@ -16,12 +16,9 @@ def scrape_data():
         browser.visit(url)
         soup = BeautifulSoup(browser.html, 'html.parser')
 
-        news_list = soup.find('ul', class_='item_list ')
-        titles = news_list.find_all('h3')
-        teasers = news_list.find_all('div', class_='article_teaser_body')
-
-        news_title = titles[0].text
-        news_teaser = teasers[0].text
+        slide = soup.find('div', class_='image_and_description_container')
+        news_title = slide.find('h3').text
+        news_teaser = slide.find('div', class_='article_teaser_body').text
 
         # Scrape featured image from JPL Mars Space Images site
         url = 'https://www.jpl.nasa.gov/spaceimages/'
@@ -86,9 +83,8 @@ def scrape_data():
             "fact_table": fact_table,
             "hemispheres": hemispheres
         }
-        
+
         return mars_data
     except Exception as e:
         print(e)
-        browser.quit()
-        return 'Err'
+        return 'err'
