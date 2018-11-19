@@ -25,9 +25,13 @@ def scrape():
     # Run the scrape function
     mars_data = scrape_mars.scrape_data()
 
-    # Update the Mongo database using update and upsert=True
-    mongo.db.scraped_data.update({}, mars_data, upsert=True)
-
+    # If scrape function errors out, then run it one more time because reasons
+    if mars_data == 'Err':
+        mars_data = scrape_mars.scrape_data()
+    else:
+        # Update the Mongo database using update and upsert=True
+        mongo.db.scraped_data.update({}, mars_data, upsert=True)
+    
     # Redirect back to home page
     return redirect("/")
 
